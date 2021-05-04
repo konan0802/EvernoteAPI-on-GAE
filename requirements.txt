@@ -1,0 +1,4 @@
+Flask==1.1.2
+evernote3==1.25.14
+oauth2
+line-bot-sdk
