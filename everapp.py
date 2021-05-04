@@ -6,6 +6,10 @@ import lineapp
 import json
 import os
 
+#ローカルで動かす際にはdotenvをインポート
+#from dotenv import load_dotenv
+#load_dotenv()
+
 EVERNOTE_DEV_TOKEN = os.environ['EVERNOTE_DEV_TOKEN']
 
 #新規ノート, コピー元のノートブック、ノートのタイトルの作成
@@ -109,6 +113,12 @@ def copyDailyReview():
     elif copiedNotebookGuid == -2 and copiedNoteGuid == -2:
         lineapp.sendError("Couldn't find the Note.")
         return "Couldn't find the Note."
+    
+    #作成予定のノートがすでに存在しないか確認
+    cofirmNewNotebookGuid, cofirmNewNoteGuid = searchNote(client, noteStore, notebooks, copied_notebook_name, new_note_name)
+    if cofirmNewNotebookGuid >= 0 and cofirmNewNoteGuid >= 0:
+        lineapp.sendError("That note already exists.")
+        return "That note already exists."
 
     #ノートをコピー
     newNote = noteStore.copyNote(EVERNOTE_DEV_TOKEN, copiedNoteGuid, copiedNotebookGuid)
@@ -149,3 +159,5 @@ def remindDailyReview(time):
     lineapp.sendMes(sentText)
 
     return time
+
+copyDailyReview()
