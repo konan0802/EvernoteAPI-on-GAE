@@ -67,7 +67,7 @@ def searchNote(client, noteStore, notebooks, notebookname, notename):
             break
     #該当するノートブックが存在しない場合にはエラー
     if copiedNotebookGuid == None:
-        return -1, -1
+        return "", ""
     
     #対象のノートを検索
     offset = 0
@@ -82,7 +82,7 @@ def searchNote(client, noteStore, notebooks, notebookname, notename):
             break
     #該当するノートが存在しない場合にはエラー
     if copiedNoteGuid == None:
-        return -2, -2
+        return "", ""
 
     return copiedNotebookGuid, copiedNoteGuid
 
@@ -107,16 +107,16 @@ def copyDailyReview():
 
     #ノートブックとノートのIDを取得
     copiedNotebookGuid, copiedNoteGuid = searchNote(client, noteStore, notebooks, copied_notebook_name, copied_note_name)
-    if copiedNotebookGuid == -1 and copiedNoteGuid == -1:
+    if copiedNotebookGuid == "" and copiedNoteGuid == "":
         lineapp.sendError("Couldn't find the Notebook.")
         return "Couldn't find the Notebook."
-    elif copiedNotebookGuid == -2 and copiedNoteGuid == -2:
+    elif copiedNotebookGuid == "" and copiedNoteGuid == "":
         lineapp.sendError("Couldn't find the Note.")
         return "Couldn't find the Note."
     
     #作成予定のノートがすでに存在しないか確認
     cofirmNewNotebookGuid, cofirmNewNoteGuid = searchNote(client, noteStore, notebooks, copied_notebook_name, new_note_name)
-    if cofirmNewNotebookGuid >= 0 and cofirmNewNoteGuid >= 0:
+    if cofirmNewNotebookGuid != "" and cofirmNewNoteGuid != "":
         lineapp.sendError("That note already exists.")
         return "That note already exists."
 
@@ -160,4 +160,4 @@ def remindDailyReview(time):
 
     return time
 
-copyDailyReview()
+#copyDailyReview()
