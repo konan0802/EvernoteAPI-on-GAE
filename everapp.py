@@ -68,7 +68,7 @@ def searchNote(client, noteStore, notebooks, notebookname, notename):
     max_notes = 400
     filter = NoteFilter(notebookGuid=copiedNotebookGuid)
     result_spec = NotesMetadataResultSpec(includeTitle=True)
-    result_list = noteStore.findNotesMetadata(DEV_TOKEN, filter, offset, max_notes, result_spec)
+    result_list = noteStore.findNotesMetadata(os.environ['DEV_TOKEN'], filter, offset, max_notes, result_spec)
     copiedNoteGuid = None
     for note in result_list.notes:
         if note.title == notename:
@@ -109,11 +109,11 @@ def copyDailyReview():
         return "Couldn't find the Note."
 
     #ノートをコピー
-    newNote = noteStore.copyNote(DEV_TOKEN, copiedNoteGuid, copiedNotebookGuid)
+    newNote = noteStore.copyNote(os.environ['DEV_TOKEN'], copiedNoteGuid, copiedNotebookGuid)
     #コピーしたノート名を編集
     newNote.title = new_note_name
     #コピー先のノートを編集
-    noteStore.updateNote(DEV_TOKEN, newNote)
+    noteStore.updateNote(os.environ['DEV_TOKEN'], newNote)
 
     return "Evernote succeeded in creating a note."
 
@@ -121,11 +121,11 @@ def copyDailyReview():
 def remindDailyReview(time):
 
     #Evernoteインスタンスの生成
-    client, noteStore, notebooks = initializeEvernote(DEV_TOKEN)
+    client, noteStore, notebooks = initializeEvernote(os.environ['DEV_TOKEN'])
 
     #新規ノート, コピー元のノートブック、ノートのタイトルの作成
-    new_note_name, copied_notebook_name = makeTitle()
-    if new_note_name == "" and copied_notebook_name == "":
+    new_note_name, copied_notebook_name, copied_note_name = makeTitle()
+    if new_note_name == "" and copied_notebook_name == "" and copied_note_name == "":
         lineapp.sendError("Failed to makeTitle()")
         return "Failed to makeTitle()"
 
@@ -140,9 +140,9 @@ def remindDailyReview(time):
 
     #メッセージの送信
     if time == "morning":
-        sentText = "おはよう！！" + "\n" + "今日の頑張りも記録していこう👍" + "\n" + "https://www.evernote.com/shard/s440/nl/181315865/" + newNote.guid
+        sentText = "おはよう！！" + "\n" + "今日の頑張りも記録していこう👍" + "\n" + "https://www.evernote.com/shard/s440/nl/181315865/" + copiedNoteGuid
     else:
-        sentText = "今日はどうだった？？" + "\n" + "今日も忘れずに振り返りを行っていきましょう👍" + "\n" + "https://www.evernote.com/shard/s440/nl/181315865/" + newNote.guid
+        sentText = "今日はどうだった？？" + "\n" + "今日も忘れずに振り返りを行っていきましょう👍" + "\n" + "https://www.evernote.com/shard/s440/nl/181315865/" + copiedNoteGuid
 
     lineapp.sendMes(sentText)
 
