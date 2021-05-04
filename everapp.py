@@ -39,10 +39,10 @@ def makeTitle():
     return new_note_name, copied_notebook_name, copied_note_name
 
 #Evernoteインスタンスの生成
-def initializeEvernote(dev_token):
+def initializeEvernote(EVERNOTE_DEV_TOKEN):
     
     #clientの生成
-    client = EvernoteClient(token=dev_token, sandbox=False)
+    client = EvernoteClient(token=EVERNOTE_DEV_TOKEN, sandbox=False)
 
     #ノートブックの取得
     noteStore = client.get_note_store()
@@ -68,7 +68,7 @@ def searchNote(client, noteStore, notebooks, notebookname, notename):
     max_notes = 400
     filter = NoteFilter(notebookGuid=copiedNotebookGuid)
     result_spec = NotesMetadataResultSpec(includeTitle=True)
-    result_list = noteStore.findNotesMetadata(os.environ['DEV_TOKEN'], filter, offset, max_notes, result_spec)
+    result_list = noteStore.findNotesMetadata(os.environ['EVERNOTE_DEV_TOKEN'], filter, offset, max_notes, result_spec)
     copiedNoteGuid = None
     for note in result_list.notes:
         if note.title == notename:
@@ -91,7 +91,7 @@ def searchNote(client, noteStore, notebooks, notebookname, notename):
 def copyDailyReview():
 
     #Evernoteインスタンスの生成
-    client, noteStore, notebooks = initializeEvernote(os.environ['DEV_TOKEN'])
+    client, noteStore, notebooks = initializeEvernote(os.environ['EVERNOTE_DEV_TOKEN'])
 
     #新規ノート, コピー元のノートブック、ノートのタイトルの作成
     new_note_name, copied_notebook_name, copied_note_name = makeTitle()
@@ -109,11 +109,11 @@ def copyDailyReview():
         return "Couldn't find the Note."
 
     #ノートをコピー
-    newNote = noteStore.copyNote(os.environ['DEV_TOKEN'], copiedNoteGuid, copiedNotebookGuid)
+    newNote = noteStore.copyNote(os.environ['EVERNOTE_DEV_TOKEN'], copiedNoteGuid, copiedNotebookGuid)
     #コピーしたノート名を編集
     newNote.title = new_note_name
     #コピー先のノートを編集
-    noteStore.updateNote(os.environ['DEV_TOKEN'], newNote)
+    noteStore.updateNote(os.environ['EVERNOTE_DEV_TOKEN'], newNote)
 
     return "Evernote succeeded in creating a note."
 
@@ -121,7 +121,7 @@ def copyDailyReview():
 def remindDailyReview(time):
 
     #Evernoteインスタンスの生成
-    client, noteStore, notebooks = initializeEvernote(os.environ['DEV_TOKEN'])
+    client, noteStore, notebooks = initializeEvernote(os.environ['EVERNOTE_DEV_TOKEN'])
 
     #新規ノート, コピー元のノートブック、ノートのタイトルの作成
     new_note_name, copied_notebook_name, copied_note_name = makeTitle()

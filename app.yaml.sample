@@ -1,5 +1,5 @@
 runtime: python39
 env_variables:
-  DEV_TOKEN: ''
+  EVERNOTE_DEV_TOKEN: ''
   LINE_CHANNEL_ACCESS_TOKEN: ''
-  USER_ID: ''
+  LINE_USER_ID: ''
