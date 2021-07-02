@@ -14,8 +14,8 @@ EvernoteとLINEのAPIを利用した **「Motivate App」** のプログラム
 | エンドポイント | 概要 |
 | ---- | ---- |
 | /create | 新規ノートの作成 |
-| /remind-morning  | 朝のリマインドの送信 |
-| /remind-night  | 夜のリマインドの送信 |
+| /remind-morning  | 朝のリマインドの送信（目標確認） |
+| /remind-night  | 夜のリマインドの送信 （振り返り）|
 
 ### **◇動作**
 * GAEの`Cloud Scheduler`により定刻にAPIを叩く
