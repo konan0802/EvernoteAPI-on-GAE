@@ -6,6 +6,7 @@ import lineapp
 import json
 import pytz
 import os
+import re
 
 # ローカルで動かす際にはdotenvをインポート
 #from dotenv import load_dotenv
@@ -161,4 +162,26 @@ def remindDailyReview(time):
 
     return time
 
-#copyDailyReview()
+# 対象ノートに記載されたメッセージを送信
+def messageFromNote(notebook_name, note_name):
+    # Evernoteインスタンスの生成
+    client, note_store, notebooks = initializeEvernote(EVERNOTE_DEV_TOKEN)
+
+    # 対象のノートを取得
+    notebook_guid, note_guid = searchNote(client, note_store, notebooks, notebook_name, note_name)
+    if notebook_guid == "" or note_guid == "":
+        lineapp.sendError("That notebook or note doesn't exists.")
+        return "That notebook or note doesn't exists."
+    
+    note_content = note_store.getNoteContent(EVERNOTE_DEV_TOKEN, note_guid)
+    note_content = re.sub('</h2>','\n',note_content)
+    note_content = re.sub('</div>','\n',note_content)
+    note_content = re.sub('<.+?>','',note_content)
+    note_content = note_content.rstrip("\n")
+    note_content_list = note_content.split('\n\n')
+
+    for senderText in note_content_list:
+        senderText = re.sub('◇Message\n','',senderText)
+        lineapp.sendMes(senderText)
+
+#messageFromNote("Storage", "DailyWinnerMind")

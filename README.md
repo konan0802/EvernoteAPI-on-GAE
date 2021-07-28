@@ -14,8 +14,9 @@ EvernoteとLINEのAPIを利用した **「Motivate App」** のプログラム
 | エンドポイント | 概要 |
 | ---- | ---- |
 | /create | 新規ノートの作成 |
-| /remind-morning  | 朝のリマインドの送信（目標確認） |
-| /remind-night  | 夜のリマインドの送信 （振り返り）|
+| /remind-morning | 朝のリマインドの送信（目標確認） |
+| /remind-night | 夜のリマインドの送信 （振り返り） |
+| /message | 対象ノートに記載されたメッセージを送信 |
 
 ### **◇動作**
 * GAEの`Cloud Scheduler`により定刻にAPIを叩く
@@ -23,6 +24,8 @@ EvernoteとLINEのAPIを利用した **「Motivate App」** のプログラム
 * 本番環境での環境変数は`app.yaml`に持たせる
 * ローカル環境での環境変数は`.env`に持たせる
     * コメントアウトしている`dotenv`のインポートをアクティベートする必要がある
+        * everapp.py
+        * lineapp.py
 
 ## **デプロイ方法**
 ```bash:bash
